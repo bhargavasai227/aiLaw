@@ -1,7 +1,7 @@
 "use client"
 
 import { useState ,useRef} from "react";
-
+import ai from "./api"
 const {
   GoogleGenerativeAI,
   HarmCategory,
@@ -10,10 +10,12 @@ const {
 
 
 const MODEL_NAME = "gemini-1.0-pro";
-const API_KEY = process.env.API;
+
+
 
 async function runChat(input) {
-  const genAI = new GoogleGenerativeAI(API_KEY);
+  console.log(ai());
+  const genAI = new GoogleGenerativeAI(ai());
   const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
   const generationConfig = {
@@ -64,7 +66,7 @@ async function runChat(input) {
       },
     ],
   });
-  console.log("hii");
+  
   const result = await chat.sendMessage(input);
   const response = result.response;
   return response.text();
@@ -79,7 +81,7 @@ export default function Home() {
   return (
     <main className="flex h-[85vh] flex-col items-center justify-between ">
     <div className=" overflow-y-auto p-9 w-[100%]  rounded-2xl ">
-    {ans.map((e)=> (<p className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>))}
+    {ans.map((e,i)=> (<p key={i} className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>))}
     </div>
 
     <div className="flex w-full items-center justify-between p-8">
