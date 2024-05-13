@@ -66,7 +66,11 @@ async function runChat(input) {
       },
     ],
   });
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 6b4d37a2aaa3def982835fd169a5a9e73606def5
   const result = await chat.sendMessage(input);
   const response = result.response;
   return response.text();
