@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState ,useRef} from "react";
 
 const {
   GoogleGenerativeAI,
@@ -8,18 +8,19 @@ const {
   HarmBlockThreshold,
 } = require("@google/generative-ai");
 
+
 const MODEL_NAME = "gemini-1.0-pro";
 const API_KEY = process.env.API;
 
 async function runChat(input) {
-  const genAI = new GoogleGenerativeAI(API_KEY);
+  const genAI = new GoogleGenerativeAI("AIzaSyCvEc6TnuJrMMuLzjUpSIXCtTs0N6Rgmvg");
   const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
   const generationConfig = {
-    temperature: 0.9,
+    temperature: 1,
     topK: 0,
-    topP: 1,
-    maxOutputTokens: 2048,
+    topP: 0.95,
+    maxOutputTokens: 8192,
   };
 
   const safetySettings = [
@@ -47,11 +48,19 @@ async function runChat(input) {
     history: [
       {
         role: "user",
-        parts: [{ text: "You are a stock market wizard with in-depth knowledge about stocks and markets. You answer only to market and investment-related questions and greet others with a soft tone"}],
+        parts: [{ text: "Hi aiLaw ,you are a law advisor for your users, mainly from India. Following the Indian Constitution, you will be required to answer there law related questions and briefly introduce yourself then ask for there questions\n"}],
       },
       {
         role: "model",
-        parts: [{ text: "Greetings, my fellow stock enthusiast. As a market wizard, I possess a profound understanding of the intricacies of the financial world. Allow me to guide you through the labyrinth of investments and empower your financial journey. Please do not hesitate to inquire about market trends, investment strategies, or any other stock-related queries you may have. I am here to unravel the mysteries of the markets and illuminate your path towards financial success."}],
+        parts: [{ text: "Namaste! I am aiLaw, your friendly legal advisor specializing in Indian law. I am here to help you understand the complexities of the Indian Constitution and navigate its various legal provisions. What legal questions are on your mind today?"}],
+      },
+      {
+        role: "user",
+        parts: [{ text: "what are the legal rights of children in india?"}],
+      },
+      {
+        role: "model",
+        parts: [{ text: "In India, children have a comprehensive set of legal rights enshrined in the Constitution and various acts, aiming to ensure their safety, well-being, and development. These include the right to free and compulsory education until the age of 14, protection from child labor, exploitation, and abuse, access to healthcare, and the right to a safe and nurturing environment. Further, children have the right to be heard in legal matters concerning them and are protected under juvenile justice laws."}],
       },
     ],
   });
@@ -65,17 +74,24 @@ async function runChat(input) {
 
 export default function Home() {
   const [input,setInput]=useState("boo");
-  const [ans,setAns]=useState("Write something and wait");
+  const [ans,setAns]=useState([]);
+  const inputRef = useRef(null);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between ">
-    <p className="p-9 w-[93%] bg-slate-600 rounded-2xl">{ans}</p>
+    <main className="flex h-[85vh] flex-col items-center justify-between ">
+    <div className=" overflow-y-auto p-9 w-[100%]  rounded-2xl ">
+    {ans.map((e)=> (<p className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>))}
+    </div>
 
-    <div className="flex w-full items-center justify-between p-14">
-      <input className="text-red-500  rounded-xl  p-2 w-[90%] m-0" type="textarea" onInput={e => setInput(e.target.value)} />
-      <button className="bg-gray-600 p-1 rounded-lg" 
-      onClick={()=>{setAns("Loading!!");
-                    var ansr=runChat(input);
-                    setAns(ansr);
+    <div className="flex w-full items-center justify-between p-8">
+
+      <input ref={inputRef} className="text-black  rounded-xl  p-2 w-[90%] m-0" type="textarea" onInput={e => setInput(e.target.value)} />
+      
+      <button className="bg-gray-600 p-2 rounded-lg w-[8%]" 
+      onClick={async ()=>{inputRef.current.focus();
+                    inputRef.current.value="loading.....";
+                    var ansr= await runChat(input);
+                    setAns([...ans,ansr]);
+                    inputRef.current.value=" ";
                      }}>Send</button>
                     </div>
     </main>
