@@ -64,7 +64,7 @@ async function runChat(input) {
       },
     ],
   });
-  console.log("hii");
+
   const result = await chat.sendMessage(input);
   const response = result.response;
   return response.text();
@@ -79,7 +79,7 @@ export default function Home() {
   return (
     <main className="flex h-[85vh] flex-col items-center justify-between ">
     <div className=" overflow-y-auto p-9 w-[100%]  rounded-2xl ">
-    {ans.map((e)=> (<p className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>))}
+    {ans.map((e,i)=> (<p key={i} className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>))}
     </div>
 
     <div className="flex w-full items-center justify-between p-8">
