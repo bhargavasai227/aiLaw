@@ -13,7 +13,7 @@ const MODEL_NAME = "gemini-1.0-pro";
 const API_KEY = process.env.API;
 
 async function runChat(input) {
-  const genAI = new GoogleGenerativeAI("AIzaSyCvEc6TnuJrMMuLzjUpSIXCtTs0N6Rgmvg");
+  const genAI = new GoogleGenerativeAI(API_KEY);
   const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
   const generationConfig = {
