@@ -83,11 +83,12 @@ export default function Home() {
     <div className=" overflow-y-auto p-9 w-[100%]  rounded-2xl ">
     {ans.map((e,i)=> (
       <motion.div
+      key={i}
     initial={{ opacity: 0, scale:1}}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.5 }}
   >
-      <p key={i} className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>
+      <p  className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>
       
       </motion.div>))}
     </div>
