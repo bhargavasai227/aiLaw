@@ -1,5 +1,5 @@
 "use client"
-
+import { motion } from "framer-motion"
 import { useState ,useRef} from "react";
 import ai from "./api"
 const {
@@ -78,23 +78,35 @@ export default function Home() {
   const [ans,setAns]=useState([]);
   const inputRef = useRef(null);
   return (
+    <>
     <main className="flex h-[85vh] flex-col items-center justify-between ">
     <div className=" overflow-y-auto p-9 w-[100%]  rounded-2xl ">
-    {ans.map((e,i)=> (<p key={i} className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>))}
+    {ans.map((e,i)=> (
+      <motion.div
+    initial={{ opacity: 0, scale:1}}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.5 }}
+  >
+      <p key={i} className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>
+      
+      </motion.div>))}
     </div>
-
-    <div className="flex w-full items-center justify-between p-8">
+</main>
+<footer>
+    <div className="flex w-full  justify-between px-8 py-2 gap-1 bg-gradient-to-b from-black to-gray-900">
 
       <input ref={inputRef} className="text-black  rounded-xl  p-2 w-[90%] m-0" type="textarea" onInput={e => setInput(e.target.value)} />
       
-      <button className="bg-gray-600 p-2 rounded-lg w-[8%]" 
+      <button className="bg-gray-600 p-2 rounded-lg sm:w-[8%]" 
       onClick={async ()=>{inputRef.current.focus();
+                    setAns([...ans,input]);
                     inputRef.current.value="loading.....";
                     var ansr= await runChat(input);
                     setAns([...ans,ansr]);
                     inputRef.current.value=" ";
                      }}>Send</button>
                     </div>
-    </main>
+                    </footer>
+    </>
   );
 }
