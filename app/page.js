@@ -13,6 +13,7 @@ const MODEL_NAME = "gemini-1.0-pro";
 
 
 
+
 async function runChat(input) {
   console.log(ai());
   const genAI = new GoogleGenerativeAI(ai());
@@ -67,16 +68,21 @@ async function runChat(input) {
     ],
   });
   const result = await chat.sendMessage(input);
-  const response = result.response;
-  return response.text();
+  const response = result.response.text();
+  return response;
  
 }
 
 
 export default function Home() {
+
   const [input,setInput]=useState("boo");
   const [ans,setAns]=useState([]);
   const inputRef = useRef(null);
+
+
+  
+ 
   return (
     <>
     <main className="flex h-[85vh] flex-col items-center justify-between ">
@@ -88,25 +94,38 @@ export default function Home() {
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.5 }}
   >
-      <p  className="bg-slate-700 p-1 m-[3px] rounded-md">{e}</p>
+      <div className="bg-slate-700 p-1 m-[3px] rounded-md">
+      {e.split("**").map((segment, index) => (
+        <div  key={index}>
+          {segment}
+          <br />
+        </div>
+      ))}
+    </div>
       
       </motion.div>))}
     </div>
 </main>
+
 <footer>
+<form>
     <div className="flex w-full  justify-between px-8 py-2 gap-1 bg-gradient-to-b from-black to-gray-900">
 
-      <input ref={inputRef} className="text-black  rounded-xl  p-2 w-[90%] m-0" type="textarea" onInput={e => setInput(e.target.value)} />
+      <input ref={inputRef} className="bg-[#7a7e9096] rounded-xl  p-2 w-[90%] m-0" type="textarea" onInput={e => setInput(e.target.value)} />
       
-      <button className="bg-gray-600 p-2 rounded-lg sm:w-[8%]" 
-      onClick={async ()=>{inputRef.current.focus();
+      <button type="submit" className="bg-gray-600 p-2 rounded-lg sm:w-[8%]" 
+      onClick={async (e)=>{
+                    e.preventDefault();
+                    inputRef.current.focus();
                     setAns([...ans,input]);
                     inputRef.current.value="loading.....";
                     var ansr= await runChat(input);
                     setAns([...ans,ansr]);
                     inputRef.current.value=" ";
                      }}>Send</button>
+                   
                     </div>
+                    </form>
                     </footer>
     </>
   );
